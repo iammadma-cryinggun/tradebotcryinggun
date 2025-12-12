@@ -12,6 +12,10 @@ import pandas as pd
 from pathlib import Path
 from collections import deque, defaultdict
 import traceback
+from dotenv import load_dotenv  # 🔧 新增
+
+# 🔧 加载环境变量（在代码最前面）
+load_dotenv()
 
 # ==================== 1. 全局配置 (V15.7 放宽止损版) ====================
 
@@ -68,7 +72,7 @@ SCAN_INTERVAL = 2                 # 2秒一轮
 PRICE_SNAPSHOT_INTERVAL = 2
 
 # ==================== 日志配置 ====================
-BASE_DIR = r"C:\Users\Martin\Downloads\机器人\超短线"
+BASE_DIR = r"/app"  # 🔧 修改为Railway/Koyeb路径
 LOG_DIR = os.path.join(BASE_DIR, "logs")
 DATA_DIR = os.path.join(BASE_DIR, "data")
 
@@ -78,18 +82,25 @@ DAILY_LOG = os.path.join(LOG_DIR, "daily_summary.csv")
 DATA_FILE = os.path.join(DATA_DIR, "positions_v15_7.json")
 
 # ==================== 密钥配置 ====================
-API_KEY = "jSHGNN5ZTmnLS1Ogv1Jz3kCxyOHp4iKm0bILpmK7GbpvDpaaQlw4oqTMRRiCHFqE"
-SECRET_KEY = "428bF7Y3tERXb9z0lWTMj5tNDs6bs6iFXgRv6Bt0t7LdZoWSG01Ewdil4ADYFSeT"
+# 🔧 从环境变量读取（不是硬编码！）
+API_KEY = os.getenv("BINANCE_API_KEY", "")  # ✅ 安全方式
+SECRET_KEY = os.getenv("BINANCE_API_SECRET", "")  # ✅ 安全方式
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")  # ✅ 安全方式
+TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "")  # ✅ 安全方式
 
-# Telegram
-TELEGRAM_BOT_TOKEN = "8378210377:AAFolTlY9BsW5BfXUKt7aqavnpfGvJwgVaI"
-TELEGRAM_CHAT_ID = "838429342"
+# 🔧 安全检查
+if not API_KEY or not SECRET_KEY:
+    print("❌ 错误：请在环境变量中设置 BINANCE_API_KEY 和 BINANCE_API_SECRET")
+    print("在 .env 文件中添加：")
+    print("BINANCE_API_KEY=你的密钥")
+    print("BINANCE_API_SECRET=你的密钥")
+    sys.exit(1)
 
-USE_PROXY = True
+# Proxy配置（可选）
+USE_PROXY = False  # 🔧 在云服务器上关闭代理
 PROXY_PORT = 15236
 PROXIES = {'http': f'http://127.0.0.1:{PROXY_PORT}', 'https': f'http://127.0.0.1:{PROXY_PORT}'}
 HEADERS = {"User-Agent": "Mozilla/5.0"}
-
 # ==================== 2. 极速快照系统 ====================
 price_history = defaultdict(lambda: deque(maxlen=60)) 
 last_snapshot_time = 0
@@ -1256,4 +1267,5 @@ except Exception as e:
     sys.exit(1)
 
 if __name__ == "__main__":
+
     main()
