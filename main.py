@@ -1253,11 +1253,11 @@ def main():
 # ==================== 初始化交易所连接 ====================
 try:
     exchange = ccxt.binanceusdm({
-        'apiKey': API_KEY,
-        'secret': SECRET_KEY,
+        'apiKey': API_KEY,  # ✅ 使用环境变量
+        'secret': SECRET_KEY,  # ✅ 使用环境变量
         'enableRateLimit': True,
         'options': {'defaultType': 'future'},
-        'proxies': PROXIES if USE_PROXY else None,
+        # 🔧 移除代理（云服务器不需要）
         'timeout': 10000
     })
     exchange.load_markets()
@@ -1265,7 +1265,3 @@ try:
 except Exception as e:
     print(f"❌ 连接交易所失败: {e}")
     sys.exit(1)
-
-if __name__ == "__main__":
-
-    main()
