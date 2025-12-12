@@ -1,4 +1,20 @@
+# 在文件最最开头
+import os
+import sys
 from dotenv import load_dotenv
+
+# 然后才是调试代码
+print("=== 环境变量调试 ===")
+load_dotenv()
+
+# 打印环境变量
+env_vars = dict(os.environ)
+for key in env_vars:
+    if 'BINANCE' in key.upper() or 'TELEGRAM' in key.upper():
+        value = env_vars[key]
+        masked = value[:3] + "***" if value else "空"
+        print(f"{key}: {masked}")
+print("===================")from dotenv import load_dotenv
 load_dotenv()
 
 # 🔧 调试：打印所有相关环境变量
@@ -1277,4 +1293,5 @@ try:
 except Exception as e:
     print(f"❌ 连接交易所失败: {e}")
     sys.exit(1)
+
 
