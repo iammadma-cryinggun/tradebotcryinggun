@@ -1,3 +1,15 @@
+from dotenv import load_dotenv
+load_dotenv()
+
+# 🔧 调试：打印所有相关环境变量
+print("=== 环境变量调试 ===")
+env_vars = dict(os.environ)
+for key in env_vars:
+    if 'BINANCE' in key.upper() or 'TELEGRAM' in key.upper():
+        value = env_vars[key]
+        masked = value[:3] + "***" if value else "空"
+        print(f"{key}: {masked}")
+print("===================")
 # -*- coding: utf-8 -*-
 import ccxt
 import time
@@ -1265,3 +1277,4 @@ try:
 except Exception as e:
     print(f"❌ 连接交易所失败: {e}")
     sys.exit(1)
+
